@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KodandRoid — App, Web & Design Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05050D;--bg2:#0A0A18;--bg3:#0F0F22;--bg4:#14142a;
+  --accent:#7C5CFC;--a2:#FC5C7D;--gold:#FFD166;--green:#06D6A0;
+  --text:#F0EFF8;--sub:#8885A8;--bd:rgba(255,255,255,0.07);
+  --glow:rgba(124,92,252,0.35);--r:20px
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:16px 5%;background:rgba(5,5,13,0.95);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd);transition:padding .3s}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+/* SVG logo mark */
+.logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--a2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px var(--glow)}
+.logo-mark svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.5px;background:linear-gradient(90deg,var(--accent),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--sub);font-size:14px;font-weight:500;text-decoration:none;transition:color .2s;position:relative;padding-bottom:4px}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--accent);border-radius:1px;transition:width .25s}
+.nav-links a:hover{color:var(--text)}.nav-links a:hover::after{width:100%}
+.ncta{background:linear-gradient(135deg,var(--accent),var(--a2));color:#fff;border:none;border-radius:10px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform .2s,box-shadow .2s;letter-spacing:.2px}
+.ncta:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glow)}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.ham span{width:24px;height:2px;background:var(--text);border-radius:1px;display:block;transition:all .3s}
+.mmenu{display:none;position:fixed;top:68px;left:0;right:0;background:var(--bg2);padding:20px 5%;border-bottom:1px solid var(--bd);z-index:999;flex-direction:column;gap:4px}
+.mmenu a{color:var(--sub);text-decoration:none;font-size:15px;font-weight:500;padding:11px 0;border-bottom:1px solid var(--bd);display:block}
+.mmenu.open{display:flex}
+
+/* ── HERO BANNER (below nav) ── */
+.hero-banner{margin-top:68px;width:100%;background:linear-gradient(135deg,var(--bg3) 0%,rgba(124,92,252,.08) 50%,var(--bg3) 100%);border-bottom:1px solid var(--bd);padding:40px 5%;display:flex;align-items:center;justify-content:center;min-height:180px;position:relative;overflow:hidden}
+.hero-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 50% 50%,rgba(124,92,252,.12),transparent 70%)}
+.banner-inner{display:flex;flex-direction:column;align-items:center;gap:14px;position:relative;z-index:1;text-align:center}
+.banner-logo-big{display:flex;align-items:center;gap:16px}
+.banner-mark{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,var(--accent),var(--a2));display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(124,92,252,.4),0 8px 32px rgba(0,0,0,.5);animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 30px rgba(124,92,252,.4),0 8px 32px rgba(0,0,0,.5)}50%{box-shadow:0 0 60px rgba(124,92,252,.7),0 8px 32px rgba(0,0,0,.5)}}
+.banner-mark svg{width:38px;height:38px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.banner-name{font-family:'Syne',sans-serif;font-size:clamp(28px,5vw,48px);font-weight:800;letter-spacing:-1.5px;background:linear-gradient(135deg,#fff 0%,var(--accent) 50%,var(--a2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.banner-tagline{color:var(--sub);font-size:15px;font-weight:400;letter-spacing:.3px}
+.banner-chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.bchip{background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.25);border-radius:99px;padding:5px 14px;font-size:12px;color:var(--accent);font-weight:600}
+
+/* ── HERO SECTION ── */
+#hero{min-height:calc(100vh - 68px - 180px);display:flex;align-items:center;padding:80px 5% 80px;position:relative;overflow:hidden}
+.hbg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 70% 40%,rgba(124,92,252,.13),transparent 70%),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(252,92,125,.07),transparent 60%)}
+.hgrid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+.hcontent{max-width:680px;position:relative;z-index:1}
+.hbadge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.3);border-radius:99px;padding:6px 16px;margin-bottom:28px;font-size:12px;font-weight:600;color:var(--accent);animation:fadeUp .6s ease both}
+.bdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-family:'Syne',sans-serif;font-size:clamp(36px,6vw,68px);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:22px;animation:fadeUp .6s .1s ease both}
+.ac{color:var(--accent)}.a2c{color:var(--a2)}
+.hdesc{color:var(--sub);font-size:17px;line-height:1.8;max-width:540px;margin-bottom:36px;animation:fadeUp .6s .2s ease both}
+.hbtns{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .6s .3s ease both}
+.bp{background:linear-gradient(135deg,var(--accent),#9B8FFF);color:#fff;border:none;border-radius:12px;padding:14px 30px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 8px 30px var(--glow);transition:transform .2s,box-shadow .2s}
+.bp:hover{transform:translateY(-3px);box-shadow:0 14px 40px var(--glow)}
+.bo{background:transparent;color:var(--text);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 28px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:border-color .2s,color .2s}
+.bo:hover{border-color:var(--accent);color:var(--accent)}
+.hstats{display:flex;gap:44px;margin-top:56px;flex-wrap:wrap;animation:fadeUp .6s .4s ease both}
+.snum{font-family:'Syne',sans-serif;font-size:34px;font-weight:800;background:linear-gradient(135deg,var(--text),var(--sub));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.slbl{color:var(--sub);font-size:12px;margin-top:3px;letter-spacing:.3px}
+.hcards{position:absolute;right:5%;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;animation:fadeLeft .8s .3s ease both}
+.hcard{background:var(--bg3);border:1px solid var(--bd);border-radius:18px;padding:16px 20px;display:flex;align-items:center;gap:14px;min-width:230px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.hcard:nth-child(2){margin-left:28px}
+.hcico{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hcard h4{font-size:13px;font-weight:700;margin-bottom:2px}
+.hcard p{font-size:11px;color:var(--sub)}
+
+/* ── SECTIONS ── */
+section{padding:90px 5%}
+.stag{display:inline-block;background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.25);border-radius:99px;padding:5px 14px;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:16px;letter-spacing:1px;text-transform:uppercase}
+.stitle{font-family:'Syne',sans-serif;font-size:clamp(26px,4vw,44px);font-weight:800;line-height:1.1;letter-spacing:-1px;margin-bottom:14px}
+.ssub{color:var(--sub);font-size:16px;line-height:1.75;max-width:580px}
+
+/* ── SERVICES ── */
+#services{background:var(--bg2)}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;margin-top:52px}
+.scard{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:30px;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;overflow:hidden;cursor:default}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--a2));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.scard:hover{transform:translateY(-6px);border-color:rgba(124,92,252,.3);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.scard:hover::before{transform:scaleX(1)}
+.sico{font-size:38px;margin-bottom:20px;display:block}
+.stit{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px}
+.sdsc{color:var(--sub);font-size:14px;line-height:1.75;margin-bottom:18px}
+.stags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.2);border-radius:7px;padding:4px 10px;font-size:11px;color:var(--accent);font-weight:600}
+
+/* ── PORTFOLIO ── */
+#portfolio{background:var(--bg)}
+.pfilt{display:flex;gap:10px;margin-top:36px;flex-wrap:wrap}
+.fb{background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:8px 18px;font-size:13px;color:var(--sub);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;font-weight:500}
+.fb.on,.fb:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:22px;margin-top:24px}
+.pc{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s}
+.pc:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.6);border-color:rgba(124,92,252,.25)}
+.pt{height:180px;display:flex;align-items:center;justify-content:center;font-size:58px;position:relative}
+.pt::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--bg3) 100%)}
+.pb{padding:22px}
+.ptype{font-size:10px;color:var(--accent);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px}
+.ptit{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:8px;letter-spacing:-.3px}
+.pdsc{color:var(--sub);font-size:13px;line-height:1.65}
+.pft{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--bd)}
+.pstk{display:flex;gap:5px}
+.pstk span{background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:6px;padding:3px 9px;font-size:10px;color:var(--sub);font-weight:500}
+.plnk{color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px}
+.plnk:hover{color:var(--a2)}
+
+/* ── PROCESS ── */
+#process{background:var(--bg2)}
+.procg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:52px;position:relative}
+.procg::before{content:'';position:absolute;top:32px;left:12%;right:12%;height:2px;background:linear-gradient(90deg,var(--accent),var(--a2));opacity:.2}
+.step{text-align:center;padding:0 14px}
+.stepn{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,rgba(124,92,252,.15),rgba(124,92,252,.05));border:2px solid rgba(124,92,252,.4);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent);margin:0 auto 18px;box-shadow:0 0 28px var(--glow)}
+.step h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px}
+.step p{color:var(--sub);font-size:13px;line-height:1.65}
+
+/* ── TESTIMONIALS ── */
+#testi{background:var(--bg)}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;margin-top:52px}
+.tc{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:28px;position:relative;transition:transform .25s,box-shadow .25s}
+.tc:hover{transform:translateY(-4px);box-shadow:0 16px 50px rgba(0,0,0,.4)}
+.tc::before{content:'\201C';position:absolute;top:14px;right:20px;font-family:'Syne',sans-serif;font-size:80px;font-weight:800;color:var(--accent);opacity:.07;line-height:1}
+.stars{color:var(--gold);font-size:14px;margin-bottom:14px;letter-spacing:2px}
+.ttxt{color:var(--sub);font-size:14px;line-height:1.8;margin-bottom:22px;font-style:italic}
+.tau{display:flex;align-items:center;gap:12px}
+.tav{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--a2));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.tnm{font-weight:700;font-size:14px}
+.trl{color:var(--sub);font-size:12px;margin-top:2px}
+
+/* ── PRICING ── */
+#pricing{background:var(--bg2)}
+.prgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;margin-top:52px}
+.prbox{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:30px;transition:transform .25s,box-shadow .25s;position:relative;overflow:hidden}
+.prbox.feat{border-color:var(--accent);box-shadow:0 0 0 1px rgba(124,92,252,.3),0 24px 60px rgba(124,92,252,.2)}
+.prbox:hover{transform:translateY(-5px)}
+.fbdg{position:absolute;top:18px;right:18px;background:linear-gradient(135deg,var(--accent),var(--a2));color:#fff;border-radius:8px;padding:4px 11px;font-size:10px;font-weight:800;letter-spacing:.5px}
+.prnm{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:6px}
+.prds{color:var(--sub);font-size:13px;margin-bottom:24px;line-height:1.5}
+.pramt{font-family:'Syne',sans-serif;font-size:38px;font-weight:800;margin-bottom:24px;line-height:1;letter-spacing:-1px}
+.pramt span{font-size:15px;color:var(--sub);font-weight:400;letter-spacing:0}
+.prlist{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:11px}
+.prlist li{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub)}
+.prlist li::before{content:'✓';color:var(--green);font-weight:800;flex-shrink:0;font-size:14px}
+.prbtn{width:100%;padding:14px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;letter-spacing:.2px}
+.prbtn:hover,.prbox.feat .prbtn{background:linear-gradient(135deg,var(--accent),var(--a2));color:#fff;border-color:transparent}
+
+/* ── CONTACT ── */
+#contact{background:var(--bg);position:relative;overflow:hidden}
+#contact::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 50% 100%,rgba(124,92,252,.09),transparent 70%);pointer-events:none}
+.cwrap{display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:start;margin-top:52px;position:relative;z-index:1}
+.cinf{display:flex;flex-direction:column;gap:14px}
+.cit{display:flex;align-items:flex-start;gap:14px;background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:18px;transition:border-color .2s,transform .2s}
+.cit:hover{border-color:rgba(124,92,252,.3);transform:translateX(4px)}
+.cico{width:46px;height:46px;border-radius:13px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px}
+.cit h4{font-size:13px;font-weight:700;margin-bottom:3px}
+.cit p{color:var(--sub);font-size:13px;line-height:1.5}
+.cit a{color:var(--accent);text-decoration:none;font-weight:600}
+.cit a:hover{color:var(--a2)}
+.cfrm{display:flex;flex-direction:column;gap:14px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:28px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fg{display:flex;flex-direction:column;gap:7px}
+label{font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.5px;text-transform:uppercase}
+input,textarea,select{background:var(--bg4);border:1.5px solid var(--bd);border-radius:11px;padding:12px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,252,.12)}
+select option{background:var(--bg3);color:var(--text)}
+textarea{resize:vertical;min-height:110px}
+.sbtn{background:linear-gradient(135deg,var(--accent),var(--a2));border:none;border-radius:12px;padding:15px;color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 8px 28px var(--glow);transition:transform .2s,box-shadow .2s;width:100%;letter-spacing:.3px}
+.sbtn:hover{transform:translateY(-2px);box-shadow:0 14px 40px var(--glow)}
+.form-note{color:var(--sub);font-size:11px;text-align:center;margin-top:-4px;line-height:1.6}
+.form-note a{color:var(--accent);text-decoration:none}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--bd);padding:52px 5% 30px}
+.ftop{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}
+.fbrd p{color:var(--sub);font-size:13px;line-height:1.75;margin-top:14px;max-width:230px}
+.fcol h4{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;margin-bottom:16px;letter-spacing:1px;text-transform:uppercase;color:var(--sub)}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.fcol a{color:var(--sub);font-size:13px;text-decoration:none;transition:color .2s}
+.fcol a:hover{color:var(--accent)}
+.socs{display:flex;gap:10px;margin-top:18px}
+.sb{width:40px;height:40px;border-radius:12px;background:var(--bg3);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;text-decoration:none;transition:all .2s}
+.sb:hover{background:var(--accent);border-color:var(--accent);transform:translateY(-2px)}
+.fbot{border-top:1px solid var(--bd);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.fbot p{color:var(--sub);font-size:12px}
+
+/* ── UTILITIES ── */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#052e16;padding:14px 24px;border-radius:14px;font-size:14px;font-weight:700;z-index:9999;opacity:0;transition:all .4s;white-space:nowrap;box-shadow:0 8px 28px rgba(6,214,160,.4);pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.btt{position:fixed;bottom:30px;right:24px;width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--a2));border:none;color:#fff;font-size:18px;cursor:pointer;opacity:0;transition:all .3s;z-index:500;box-shadow:0 6px 20px var(--glow)}
+.btt.on{opacity:1}.btt:hover{transform:translateY(-3px)}
+
+/* ── LOGO UPLOAD ── */
+.logo-img{width:36px;height:36px;border-radius:10px;object-fit:cover;flex-shrink:0;box-shadow:0 4px 14px var(--glow)}
+.banner-logo-img{width:72px;height:72px;border-radius:22px;object-fit:cover;box-shadow:0 0 40px rgba(124,92,252,.4),0 8px 32px rgba(0,0,0,.5);animation:logoPulse 3s ease-in-out infinite}
+.logo-upload-btn{position:fixed;bottom:90px;right:24px;background:linear-gradient(135deg,var(--accent),var(--a2));border:none;border-radius:14px;padding:10px 16px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;z-index:600;box-shadow:0 6px 20px var(--glow);display:flex;align-items:center;gap:7px;font-family:'DM Sans',sans-serif;transition:transform .2s,box-shadow .2s}
+.logo-upload-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px var(--glow)}
+#logoFileInput{display:none}
+.logo-upload-tip{position:fixed;bottom:140px;right:24px;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:10px 14px;color:var(--sub);font-size:11px;z-index:600;max-width:180px;line-height:1.6;text-align:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.logo-upload-tip.show{opacity:1}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeLeft{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.rv.on{opacity:1;transform:translateY(0)}
+
+@media(max-width:960px){
+  .hcards{display:none}
+  .cwrap{grid-template-columns:1fr;gap:36px}
+  .ftop{grid-template-columns:1fr 1fr;gap:28px}
+  .procg::before{display:none}
+}
+@media(max-width:640px){
+  .nav-links,.ncta{display:none}
+  .ham{display:flex}
+  h1{font-size:36px;letter-spacing:-1px}
+  .hstats{gap:22px}
+  .frow{grid-template-columns:1fr}
+  .ftop{grid-template-columns:1fr}
+  section{padding:64px 5%}
+  .hbtns{flex-direction:column}
+  .bp,.bo{width:100%;text-align:center}
+  .fbot{flex-direction:column;text-align:center}
+  .procg{grid-template-columns:1fr 1fr;gap:28px}
+  .hero-banner{padding:28px 5%}
+  .banner-name{font-size:28px}
+  .cfrm{padding:20px}
+}
+@media(max-width:380px){.procg{grid-template-columns:1fr}.banner-logo-big{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">Message!</div>
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <a class="logo" onclick="gto('hero')">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    </div>
+    <span class="logo-text">KodandRoid</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services" onclick="return go('services')">Services</a></li>
+    <li><a href="#portfolio" onclick="return go('portfolio')">Portfolio</a></li>
+    <li><a href="#process" onclick="return go('process')">Process</a></li>
+    <li><a href="#pricing" onclick="return go('pricing')">Pricing</a></li>
+    <li><a href="#contact" onclick="return go('contact')">Contact</a></li>
+  </ul>
+  <button class="ncta" onclick="gto('contact')">Get a Quote →</button>
+  <button class="ham" id="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mmenu" id="mob">
+  <a href="#services" onclick="mgo('services')">⚙️ Services</a>
+  <a href="#portfolio" onclick="mgo('portfolio')">🖼️ Portfolio</a>
+  <a href="#process" onclick="mgo('process')">🔄 Process</a>
+  <a href="#pricing" onclick="mgo('pricing')">💰 Pricing</a>
+  <a href="#contact" onclick="mgo('contact')">📩 Contact</a>
+</div>
+
+<!-- ── CUSTOM LOGO BANNER (below nav) ── -->
+<div class="hero-banner">
+  <div class="banner-inner">
+    <div class="banner-logo-big">
+      <div class="banner-mark">
+        <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div>
+        <div class="banner-name">KodandRoid</div>
+        <div class="banner-tagline">App · Web · Design Studio — Mumbai, India</div>
+      </div>
+    </div>
+    <div class="banner-chips">
+      <span class="bchip">📱 Android</span>
+      <span class="bchip">🍎 iOS</span>
+      <span class="bchip">🌐 Web</span>
+      <span class="bchip">🎨 Design</span>
+      <span class="bchip">⚙️ Backend</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hbg"></div><div class="hgrid"></div>
+  <div class="hcontent">
+    <div class="hbadge"><div class="bdot"></div>Currently accepting new projects</div>
+    <h1>We Build<br/><span class="ac">Digital</span><br/><span class="a2c">Experiences</span></h1>
+    <p class="hdesc">From Android & iOS apps to full-stack websites and brand identities — KodandRoid delivers professional digital solutions at competitive prices.</p>
+    <div class="hbtns">
+      <button class="bp" onclick="gto('portfolio')">View Our Work →</button>
+      <button class="bo" onclick="gto('contact')">Start a Project</button>
+    </div>
+    <div class="hstats">
+      <div><div class="snum" id="s1">0</div><div class="slbl">Projects Delivered</div></div>
+      <div><div class="snum" id="s2">0</div><div class="slbl">Happy Clients</div></div>
+      <div><div class="snum" id="s3">0</div><div class="slbl">Years Experience</div></div>
+    </div>
+  </div>
+  <div class="hcards">
+    <div class="hcard"><div class="hcico" style="background:rgba(252,92,125,.12)">📱</div><div><h4>Android & iOS Apps</h4><p>Kotlin · Swift · React Native</p></div></div>
+    <div class="hcard"><div class="hcico" style="background:rgba(124,92,252,.12)">🌐</div><div><h4>Web Development</h4><p>React · Node.js · WordPress</p></div></div>
+    <div class="hcard"><div class="hcico" style="background:rgba(6,214,160,.12)">🎨</div><div><h4>Logo & Branding</h4><p>Figma · Illustrator · AI</p></div></div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="stag rv">What We Do</div>
+  <h2 class="stitle rv">Our Services</h2>
+  <p class="ssub rv">End-to-end digital solutions — from concept to launch and beyond.</p>
+  <div class="sgrid">
+    <div class="scard rv"><span class="sico">📱</span><div class="stit">Android App Development</div><p class="sdsc">Play Store-ready Android apps with smooth UI, real-time features, and robust architecture.</p><div class="stags"><span class="tag">Kotlin</span><span class="tag">Java</span><span class="tag">Firebase</span><span class="tag">REST API</span></div></div>
+    <div class="scard rv"><span class="sico">🍎</span><div class="stit">iOS App Development</div><p class="sdsc">Native iOS apps for iPhone & iPad — built for performance, elegance, and App Store approval.</p><div class="stags"><span class="tag">Swift</span><span class="tag">SwiftUI</span><span class="tag">Xcode</span><span class="tag">CoreData</span></div></div>
+    <div class="scard rv"><span class="sico">🌐</span><div class="stit">Website Development</div><p class="sdsc">Landing pages to full e-commerce platforms — responsive, SEO-friendly, and blazing fast.</p><div class="stags"><span class="tag">HTML/CSS</span><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">WordPress</span></div></div>
+    <div class="scard rv"><span class="sico">🎨</span><div class="stit">Logo & Brand Identity</div><p class="sdsc">Distinctive logos, color systems, and brand guidelines that make your business memorable.</p><div class="stags"><span class="tag">Figma</span><span class="tag">Illustrator</span><span class="tag">Photoshop</span></div></div>
+    <div class="scard rv"><span class="sico">⚙️</span><div class="stit">Backend & API</div><p class="sdsc">Scalable server-side architecture, database design, and seamless third-party integrations.</p><div class="stags"><span class="tag">Node.js</span><span class="tag">MongoDB</span><span class="tag">MySQL</span><span class="tag">Firebase</span></div></div>
+    <div class="scard rv"><span class="sico">🚀</span><div class="stit">Maintenance & Support</div><p class="sdsc">Post-delivery support, feature updates, bug fixes, and ongoing hosting management.</p><div class="stags"><span class="tag">24/7 Support</span><span class="tag">Updates</span><span class="tag">Hosting</span></div></div>
+  </div>
+</section>
+
+<!-- ── PORTFOLIO ── -->
+<section id="portfolio">
+  <div class="stag rv">Our Work</div>
+  <h2 class="stitle rv">Recent Projects</h2>
+  <p class="ssub rv">A selection of our best work delivered for clients across industries.</p>
+  <div class="pfilt rv">
+    <button class="fb on" onclick="filt('all',this)">All Projects</button>
+    <button class="fb" onclick="filt('app',this)">📱 Apps</button>
+    <button class="fb" onclick="filt('web',this)">🌐 Websites</button>
+    <button class="fb" onclick="filt('logo',this)">🎨 Branding</button>
+  </div>
+  <div class="pgrid" id="pgrid">
+    <div class="pc rv" data-t="app"><div class="pt" style="background:linear-gradient(135deg,#1a1a3e,#2d2d6b)">🛒</div><div class="pb"><div class="ptype">Android App</div><div class="ptit">ShopEasy — E-Commerce</div><p class="pdsc">Full-featured shopping app with payment gateway, cart management, and real-time order tracking.</p><div class="pft"><div class="pstk"><span>Kotlin</span><span>Firebase</span></div><span class="plnk" onclick="toast('ShopEasy — Details coming soon!')">View Case →</span></div></div></div>
+    <div class="pc rv" data-t="web"><div class="pt" style="background:linear-gradient(135deg,#0d2137,#0d4f6b)">🏥</div><div class="pb"><div class="ptype">Website</div><div class="ptit">MedCare — Hospital Portal</div><p class="pdsc">Doctor appointment booking system with patient portal, admin dashboard, and notification system.</p><div class="pft"><div class="pstk"><span>React</span><span>Node.js</span></div><span class="plnk" onclick="toast('MedCare — Details coming soon!')">View Case →</span></div></div></div>
+    <div class="pc rv" data-t="logo"><div class="pt" style="background:linear-gradient(135deg,#1a0a2e,#3d1060)">✨</div><div class="pb"><div class="ptype">Branding</div><div class="ptit">Lumina — Jewellery Brand</div><p class="pdsc">Complete brand identity including logo, visiting cards, social media kit, and packaging design.</p><div class="pft"><div class="pstk"><span>Figma</span><span>Illustrator</span></div><span class="plnk" onclick="toast('Lumina — Details coming soon!')">View Case →</span></div></div></div>
+    <div class="pc rv" data-t="app"><div class="pt" style="background:linear-gradient(135deg,#0a2e1a,#0d5e35)">🍔</div><div class="pb"><div class="ptype">Android + iOS App</div><div class="ptit">FoodZone — Food Delivery</div><p class="pdsc">Cross-platform food delivery app with live order tracking, restaurant listing, and delivery partner app.</p><div class="pft"><div class="pstk"><span>React Native</span><span>Maps API</span></div><span class="plnk" onclick="toast('FoodZone — Details coming soon!')">View Case →</span></div></div></div>
+    <div class="pc rv" data-t="web"><div class="pt" style="background:linear-gradient(135deg,#2e1a0a,#6b3d0d)">📚</div><div class="pb"><div class="ptype">Website</div><div class="ptit">EduPath — Learning Platform</div><p class="pdsc">Online course platform with video streaming, interactive quizzes, and student progress tracking.</p><div class="pft"><div class="pstk"><span>React</span><span>MongoDB</span></div><span class="plnk" onclick="toast('EduPath — Details coming soon!')">View Case →</span></div></div></div>
+    <div class="pc rv" data-t="logo"><div class="pt" style="background:linear-gradient(135deg,#1a0a0a,#4a1515)">💈</div><div class="pb"><div class="ptype">Branding</div><div class="ptit">CutCraft — Salon Identity</div><p class="pdsc">Modern salon brand — logo design, service menu card, and complete social media template pack.</p><div class="pft"><div class="pstk"><span>Figma</span><span>Photoshop</span></div><span class="plnk" onclick="toast('CutCraft — Details coming soon!')">View Case →</span></div></div></div>
+  </div>
+</section>
+
+<!-- ── PROCESS ── -->
+<section id="process">
+  <div class="stag rv">How We Work</div>
+  <h2 class="stitle rv">Our Process</h2>
+  <p class="ssub rv">A simple, transparent, and results-focused approach to every project.</p>
+  <div class="procg">
+    <div class="step rv"><div class="stepn">01</div><h3>Discovery</h3><p>We understand your requirements, define goals clearly, and finalize the project scope together.</p></div>
+    <div class="step rv"><div class="stepn">02</div><h3>Design</h3><p>We create wireframes and UI mockups — and only move forward once you've approved the design.</p></div>
+    <div class="step rv"><div class="stepn">03</div><h3>Develop</h3><p>We write clean, scalable code and provide regular progress updates throughout development.</p></div>
+    <div class="step rv"><div class="stepn">04</div><h3>Launch</h3><p>After thorough testing, we deliver on time and provide full support during and after launch.</p></div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section id="testi">
+  <div class="stag rv">Client Love</div>
+  <h2 class="stitle rv">What Clients Say</h2>
+  <div class="tgrid">
+    <div class="tc rv"><div class="stars">★★★★★</div><p class="ttxt">"KodandRoid delivered an amazing app within the timeline. The quality was top-notch and the communication was excellent throughout."</p><div class="tau"><div class="tav">👨‍💼</div><div><div class="tnm">Rahul Sharma</div><div class="trl">Founder, ShopEasy</div></div></div></div>
+    <div class="tc rv"><div class="stars">★★★★★</div><p class="ttxt">"The website design is extremely professional. Our hospital's online presence has improved significantly since the launch."</p><div class="tau"><div class="tav">👩‍⚕️</div><div><div class="tnm">Dr. Priya Mehta</div><div class="trl">Director, MedCare</div></div></div></div>
+    <div class="tc rv"><div class="stars">★★★★★</div><p class="ttxt">"The logo and branding were so beautiful that our customers started recognizing us immediately. Highly recommended!"</p><div class="tau"><div class="tav">👩‍🎨</div><div><div class="tnm">Sneha Patel</div><div class="trl">Owner, Lumina Jewels</div></div></div></div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+  <div class="stag rv">Transparent Pricing</div>
+  <h2 class="stitle rv">Simple, Honest Plans</h2>
+  <p class="ssub rv">No hidden charges — what you see is exactly what you get.</p>
+  <div class="prgrid">
+    <div class="prbox rv"><div class="prnm">Starter</div><p class="prds">Perfect for small businesses and early-stage startups</p><div class="pramt">₹4,999 <span>/ project</span></div><ul class="prlist"><li>Landing Page Website</li><li>Mobile Responsive Design</li><li>Basic Logo Design</li><li>Contact Form Integration</li><li>1 Month Free Support</li></ul><button class="prbtn" onclick="gto('contact')">Get Started</button></div>
+    <div class="prbox feat rv"><div class="fbdg">POPULAR</div><div class="prnm">Professional</div><p class="prds">Ideal for growing businesses ready to scale</p><div class="pramt">₹14,999 <span>/ project</span></div><ul class="prlist"><li>Full Website (5–10 Pages)</li><li>Android App (Basic)</li><li>Complete Brand Kit</li><li>Admin Dashboard</li><li>Payment Gateway Integration</li><li>3 Months Free Support</li></ul><button class="prbtn" onclick="gto('contact')">Get Started</button></div>
+    <div class="prbox rv"><div class="prnm">Enterprise</div><p class="prds">Custom solutions for large-scale and complex projects</p><div class="pramt">Custom <span>pricing</span></div><ul class="prlist"><li>Custom Web Application</li><li>Android + iOS App</li><li>Backend & Database Architecture</li><li>API Integrations</li><li>Full Brand Identity System</li><li>6 Months Priority Support</li></ul><button class="prbtn" onclick="gto('contact')">Contact Us</button></div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="stag rv">Get In Touch</div>
+  <h2 class="stitle rv">Start Your Project</h2>
+  <p class="ssub rv">Fill out the form below — all inquiries go directly to our email. We reply within 24 hours.</p>
+  <div class="cwrap">
+    <div class="cinf">
+      <div class="cit rv"><div class="cico" style="background:rgba(124,92,252,.12)">📍</div><div><h4>Location</h4><p>Mumbai, Maharashtra — 400102<br/>Serving clients Pan-India & globally</p></div></div>
+      <div class="cit rv"><div class="cico" style="background:rgba(252,92,125,.12)">📸</div><div><h4>Instagram</h4><p><a href="https://instagram.com/kodandroid" target="_blank">@kodandroid</a></p></div></div>
+      <div class="cit rv"><div class="cico" style="background:rgba(6,214,160,.12)">✉️</div><div><h4>Email</h4><p>All form submissions are sent directly to our email</p></div></div>
+      <div class="cit rv"><div class="cico" style="background:rgba(255,209,102,.12)">⏰</div><div><h4>Working Hours</h4><p>Monday – Saturday<br/>10:00 AM – 8:00 PM IST</p></div></div>
+      <div class="cit rv"><div class="cico" style="background:rgba(124,92,252,.12)">⚡</div><div><h4>Response Time</h4><p>Usually within 2–4 hours during working hours</p></div></div>
+    </div>
+
+    <!-- FORM — submissions via mailto (email) -->
+    <form class="cfrm rv" id="cfrm" onsubmit="submitForm(event)">
+      <div class="frow">
+        <div class="fg">
+          <label>Your Name *</label>
+          <input type="text" id="fn" placeholder="Full name" required/>
+        </div>
+        <div class="fg">
+          <label>Contact No. / WhatsApp *</label>
+          <input type="tel" id="fp" placeholder="+91 XXXXX XXXXX" required/>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Instagram Handle</label>
+        <input type="text" id="finsta" placeholder="@your_instagram"/>
+      </div>
+      <div class="fg">
+        <label>Project Category *</label>
+        <select id="fcat" required>
+          <option value="">— Select category —</option>
+          <option value="Android">📱 Android App</option>
+          <option value="Android + iOS">📱🍎 Android + iOS App</option>
+          <option value="iOS">🍎 iOS App Only</option>
+          <option value="Web">🌐 Website / Web App</option>
+          <option value="App + Web">📱🌐 App + Website (Full Package)</option>
+          <option value="Logo & Branding">🎨 Logo & Branding</option>
+          <option value="UI/UX Design">🖼️ UI/UX Design</option>
+          <option value="Backend / API">⚙️ Backend / API Development</option>
+          <option value="Other">💬 Other</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Budget Plan *</label>
+        <select id="fbudget" required>
+          <option value="">— Select your budget —</option>
+          <option value="Under ₹5,000">Under ₹5,000</option>
+          <option value="₹5,000 – ₹15,000">₹5,000 – ₹15,000</option>
+          <option value="₹15,000 – ₹50,000">₹15,000 – ₹50,000</option>
+          <option value="₹50,000 – ₹1,00,000">₹50,000 – ₹1,00,000</option>
+          <option value="₹1,00,000+">₹1,00,000+</option>
+          <option value="Open to discussion">Open to discussion</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Briefly Explain Your Requirements *</label>
+        <textarea id="fm" placeholder="Describe what you want to build — features, timeline, any references, or special requirements..." required></textarea>
+      </div>
+      <button type="submit" class="sbtn" id="sbtn">Send Inquiry →</button>
+      <p class="form-note">Your details will be sent directly to our email. We'll get back to you within 24 hours.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="ftop">
+    <div class="fbrd">
+      <a class="logo" onclick="gto('hero')">
+        <div class="logo-mark"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <span class="logo-text">KodandRoid</span>
+      </a>
+      <p>Building digital products that make a difference. Based in Mumbai, serving clients worldwide.</p>
+      <div class="socs">
+        <a class="sb" href="https://instagram.com/kodandroid" target="_blank" title="Instagram">📸</a>
+        <a class="sb" href="#" title="YouTube">▶️</a>
+        <a class="sb" href="#" title="Telegram">✈️</a>
+        <a class="sb" href="#" title="LinkedIn">💼</a>
+      </div>
+    </div>
+    <div class="fcol"><h4>Services</h4><ul>
+      <li><a href="#services" onclick="return go('services')">Android Apps</a></li>
+      <li><a href="#services" onclick="return go('services')">iOS Apps</a></li>
+      <li><a href="#services" onclick="return go('services')">Websites</a></li>
+      <li><a href="#services" onclick="return go('services')">Logo Design</a></li>
+      <li><a href="#services" onclick="return go('services')">Backend Dev</a></li>
+    </ul></div>
+    <div class="fcol"><h4>Company</h4><ul>
+      <li><a href="#hero" onclick="return go('hero')">Home</a></li>
+      <li><a href="#portfolio" onclick="return go('portfolio')">Portfolio</a></li>
+      <li><a href="#process" onclick="return go('process')">Process</a></li>
+      <li><a href="#pricing" onclick="return go('pricing')">Pricing</a></li>
+      <li><a href="#contact" onclick="return go('contact')">Contact</a></li>
+    </ul></div>
+    <div class="fcol"><h4>Legal</h4><ul>
+      <li><a href="#" onclick="toast('Privacy Policy — Coming soon!');return false">Privacy Policy</a></li>
+      <li><a href="#" onclick="toast('Terms — Coming soon!');return false">Terms of Service</a></li>
+      <li><a href="#" onclick="toast('Refund Policy — Coming soon!');return false">Refund Policy</a></li>
+    </ul></div>
+  </div>
+  <div class="fbot">
+    <p>© 2025 KodandRoid. All rights reserved.</p>
+    <p>Made with ❤️ in Mumbai, India 🇮🇳</p>
+  </div>
+</footer>
+
+<script>
+// ── LOAD SAVED LOGO (set from admin) ─
+function applyLogo(src){
+  document.querySelectorAll('.logo-mark').forEach(function(el){
+    el.innerHTML='<img src="'+src+'" style="width:100%;height:100%;border-radius:inherit;object-fit:cover;" alt="Logo"/>';
+    el.style.background='none';el.style.padding='0';
+  });
+  document.querySelectorAll('.banner-mark').forEach(function(el){
+    el.innerHTML='<img src="'+src+'" style="width:100%;height:100%;border-radius:inherit;object-fit:cover;" alt="Logo"/>';
+    el.style.background='none';el.style.padding='0';
+  });
+}
+window.addEventListener('load',function(){
+  try{var s=localStorage.getItem('kar_logo');if(s)applyLogo(s);}catch(x){}
+});
+
+// ── NAV / SCROLL ──────────────────────
+function gto(id){var e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})}
+function go(id){gto(id);return false}
+function mgo(id){gto(id);document.getElementById('mob').classList.remove('open')}
+function toggleMob(){document.getElementById('mob').classList.toggle('open')}
+document.addEventListener('click',function(e){
+  var m=document.getElementById('mob'),h=document.getElementById('ham');
+  if(!m.contains(e.target)&&!h.contains(e.target))m.classList.remove('open');
+});
+window.addEventListener('scroll',function(){
+  var y=window.scrollY;
+  document.getElementById('nav').style.padding=y>60?'12px 5%':'16px 5%';
+  document.getElementById('btt').classList[y>400?'add':'remove']('on');
+  var ids=['hero','services','portfolio','process','testi','pricing','contact'],cur='hero';
+  ids.forEach(function(id){var el=document.getElementById(id);if(el&&y>=el.offsetTop-130)cur=id});
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    a.style.color=a.getAttribute('href')==='#'+cur?'var(--accent)':'var(--sub)';
+  });
+});
+
+// ── REVEAL ───────────────────────────
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('on')});
+},{threshold:0.1});
+document.querySelectorAll('.rv').forEach(function(el){obs.observe(el)});
+
+// ── COUNTER ──────────────────────────
+var counted=false;
+new IntersectionObserver(function(entries){
+  if(entries[0].isIntersecting&&!counted){
+    counted=true;
+    [{id:'s1',v:120,s:'+'},{id:'s2',v:98,s:'+'},{id:'s3',v:3,s:'+'}].forEach(function(c){
+      var el=document.getElementById(c.id),cur=0,inc=c.v/50;
+      var t=setInterval(function(){cur=Math.min(cur+inc,c.v);el.textContent=Math.floor(cur)+c.s;if(cur>=c.v)clearInterval(t);},30);
+    });
+  }
+},{threshold:0.5}).observe(document.querySelector('.hstats'));
+
+// ── PORTFOLIO FILTER ──────────────────
+function filt(type,btn){
+  document.querySelectorAll('.fb').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');
+  document.querySelectorAll('.pc').forEach(function(c){
+    var show=type==='all'||c.dataset.t===type;
+    c.style.display=show?'block':'none';
+    if(show){c.style.animation='none';void c.offsetHeight;c.style.animation='fadeUp .4s ease'}
+  });
+}
+
+// ── FORM SUBMIT ───────────────────────
+function submitForm(e){
+  e.preventDefault();
+  var name=document.getElementById('fn').value.trim();
+  var phone=document.getElementById('fp').value.trim();
+  var insta=document.getElementById('finsta').value.trim();
+  var cat=document.getElementById('fcat').value;
+  var budget=document.getElementById('fbudget').value;
+  var msg=document.getElementById('fm').value.trim();
+  if(!name||!phone||!cat||!budget||!msg){toast('Please fill all required fields!');return}
+  var btn=document.getElementById('sbtn');
+  btn.textContent='Sending...';btn.disabled=true;btn.style.opacity='.7';
+  var body='Name: '+name+'%0APhone/WhatsApp: '+phone+'%0AInstagram: '+(insta||'Not provided')+'%0ACategory: '+cat+'%0ABudget: '+budget+'%0A%0ARequirements:%0A'+encodeURIComponent(msg);
+  var ml='mailto:?subject=New Inquiry — '+encodeURIComponent(cat)+' — '+encodeURIComponent(name)+'&body='+body;
+  setTimeout(function(){
+    window.location.href=ml;
+    btn.textContent='Sent!';btn.style.background='linear-gradient(135deg,#06D6A0,#059669)';
+    toast('Email app will open — send it to complete!');
+    document.getElementById('cfrm').reset();
+    setTimeout(function(){btn.textContent='Send Inquiry →';btn.style.background='';btn.disabled=false;btn.style.opacity='1';},5000);
+  },1000);
+}
+
+// ── TOAST ─────────────────────────────
+var tt=null;
+function toast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  if(tt)clearTimeout(tt);
+  tt=setTimeout(function(){t.classList.remove('on');},3500);
+}
+</script>
+</body>
+</html
