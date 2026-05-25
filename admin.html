@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KodandRoid — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05050D;--bg2:#0A0A18;--bg3:#0F0F22;--bg4:#14142a;
+  --accent:#7C5CFC;--a2:#FC5C7D;--green:#06D6A0;--gold:#FFD166;
+  --red:#EF4444;--text:#F0EFF8;--sub:#8885A8;
+  --bd:rgba(255,255,255,0.07);--glow:rgba(124,92,252,0.3)
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:0}
+.login-box{background:var(--bg3);border:1px solid var(--bd);border-radius:24px;padding:40px;width:100%;max-width:380px;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.login-logo{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:28px}
+.login-mark{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--a2));display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px var(--glow)}
+.login-mark svg{width:28px;height:28px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.login-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;text-align:center;margin-bottom:6px}
+.login-sub{color:var(--sub);font-size:13px;text-align:center;margin-bottom:28px}
+.login-field{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.login-field label{font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.5px;text-transform:uppercase}
+.login-field input{background:var(--bg4);border:1.5px solid var(--bd);border-radius:11px;padding:13px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
+.login-field input:focus{border-color:var(--accent)}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--a2));border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:6px;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 24px var(--glow)}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px var(--glow)}
+.login-err{color:var(--red);font-size:12px;text-align:center;margin-top:10px;min-height:18px}
+.login-hint{color:var(--sub);font-size:11px;text-align:center;margin-top:16px;opacity:.6}
+
+/* ── DASHBOARD ── */
+#dashboard{display:none;min-height:100vh}
+
+/* Sidebar */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:240px;background:var(--bg2);border-right:1px solid var(--bd);display:flex;flex-direction:column;z-index:100;transition:transform .3s}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:22px 20px;border-bottom:1px solid var(--bd)}
+.s-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--a2));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s-mark svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.s-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sidebar-nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
+.snav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;cursor:pointer;transition:all .2s;color:var(--sub);font-size:14px;font-weight:500;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+.snav-item:hover{background:rgba(124,92,252,.1);color:var(--text)}
+.snav-item.active{background:rgba(124,92,252,.15);color:var(--accent);font-weight:600}
+.snav-item .icon{font-size:18px;width:22px;text-align:center;flex-shrink:0}
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--bd)}
+.logout-btn{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;cursor:pointer;color:var(--red);font-size:14px;font-weight:600;border:none;background:rgba(239,68,68,.08);width:100%;font-family:'DM Sans',sans-serif;transition:background .2s}
+.logout-btn:hover{background:rgba(239,68,68,.15)}
+
+/* Main content */
+.main{margin-left:240px;padding:28px;min-height:100vh}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.top-bar h1{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px}
+.top-bar .badge{background:rgba(6,214,160,.12);border:1px solid rgba(6,214,160,.25);color:var(--green);border-radius:99px;padding:5px 14px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Tabs */
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* Stat cards */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:var(--bg3);border:1px solid var(--bd);border-radius:18px;padding:22px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--a2))}
+.stat-ico{font-size:28px;margin-bottom:12px}
+.stat-val{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;line-height:1;margin-bottom:5px}
+.stat-lbl{color:var(--sub);font-size:12px;font-weight:500}
+
+/* Cards */
+.card{background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:24px;margin-bottom:22px}
+.card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.card-title span{font-size:20px}
+
+/* Logo upload area */
+.logo-upload-area{border:2px dashed rgba(124,92,252,.3);border-radius:16px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(124,92,252,.04)}
+.logo-upload-area:hover{border-color:var(--accent);background:rgba(124,92,252,.08)}
+.logo-upload-area.dragging{border-color:var(--accent);background:rgba(124,92,252,.12)}
+#logoPreviewArea{display:flex;align-items:center;gap:20px;margin-top:20px;background:var(--bg4);border-radius:14px;padding:16px;border:1px solid var(--bd)}
+.logo-preview-nav{width:44px;height:44px;border-radius:12px;overflow:hidden;border:2px solid var(--accent);background:linear-gradient(135deg,var(--accent),var(--a2));display:flex;align-items:center;justify-content:center}
+.logo-preview-banner{width:80px;height:80px;border-radius:20px;overflow:hidden;border:2px solid var(--accent);background:linear-gradient(135deg,var(--accent),var(--a2));display:flex;align-items:center;justify-content:center}
+.logo-preview-nav svg,.logo-preview-banner svg{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.logo-preview-nav img,.logo-preview-banner img{width:100%;height:100%;object-fit:cover}
+.preview-labels{display:flex;flex-direction:column;gap:8px}
+.preview-label{color:var(--sub);font-size:12px;font-weight:600}
+#logoFileIn{display:none}
+.upload-ico{font-size:36px;margin-bottom:12px}
+.upload-txt{color:var(--text);font-size:14px;font-weight:600;margin-bottom:5px}
+.upload-sub{color:var(--sub);font-size:12px}
+.btn-upload{background:linear-gradient(135deg,var(--accent),var(--a2));border:none;border-radius:11px;padding:11px 24px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:14px;transition:transform .2s,box-shadow .2s}
+.btn-upload:hover{transform:translateY(-2px);box-shadow:0 8px 20px var(--glow)}
+.btn-remove{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:8px 16px;color:var(--red);font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:10px;transition:all .2s}
+.btn-remove:hover{background:rgba(239,68,68,.2)}
+.btn-save{background:linear-gradient(135deg,var(--green),#059669);border:none;border-radius:11px;padding:12px 28px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 20px rgba(6,214,160,.3)}
+.btn-save:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(6,214,160,.4)}
+
+/* Settings form */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fg{display:flex;flex-direction:column;gap:7px;margin-bottom:4px}
+.fg.full{grid-column:span 2}
+label{font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.5px;text-transform:uppercase}
+input[type=text],input[type=email],input[type=tel],input[type=password],textarea{background:var(--bg4);border:1.5px solid var(--bd);border-radius:11px;padding:12px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;width:100%}
+input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,252,.1)}
+textarea{resize:vertical;min-height:80px}
+
+/* Inquiries table */
+.inquiries-list{display:flex;flex-direction:column;gap:12px}
+.inquiry-card{background:var(--bg4);border:1px solid var(--bd);border-radius:14px;padding:18px;transition:border-color .2s}
+.inquiry-card:hover{border-color:rgba(124,92,252,.3)}
+.inq-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.inq-name{font-size:15px;font-weight:700}
+.inq-cat{background:rgba(124,92,252,.12);border:1px solid rgba(124,92,252,.2);border-radius:7px;padding:3px 10px;font-size:11px;color:var(--accent);font-weight:600}
+.inq-budget{background:rgba(6,214,160,.1);border:1px solid rgba(6,214,160,.2);border-radius:7px;padding:3px 10px;font-size:11px;color:var(--green);font-weight:600}
+.inq-details{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px}
+.inq-detail{color:var(--sub);font-size:12px;display:flex;align-items:center;gap:4px}
+.inq-msg{color:var(--sub);font-size:13px;line-height:1.6;background:var(--bg3);border-radius:10px;padding:10px 12px;margin-top:6px}
+.inq-actions{display:flex;gap:8px;margin-top:12px}
+.inq-btn{border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;border:none}
+.inq-btn.reply{background:rgba(124,92,252,.15);color:var(--accent);border:1px solid rgba(124,92,252,.25)}
+.inq-btn.reply:hover{background:var(--accent);color:#fff}
+.inq-btn.del{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.inq-btn.del:hover{background:var(--red);color:#fff}
+.empty-state{text-align:center;padding:48px 20px;color:var(--sub)}
+.empty-state .e-ico{font-size:44px;margin-bottom:14px}
+.empty-state p{font-size:14px;line-height:1.7}
+
+/* Password change */
+.pass-form{max-width:400px}
+
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#052e16;padding:13px 22px;border-radius:13px;font-size:13px;font-weight:700;z-index:99999;opacity:0;transition:all .35s;white-space:nowrap;pointer-events:none;box-shadow:0 8px 24px rgba(6,214,160,.35)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--red);color:#fff;box-shadow:0 8px 24px rgba(239,68,68,.35)}
+
+/* Hamburger for mobile */
+.mob-toggle{display:none;position:fixed;top:16px;left:16px;z-index:200;background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:9px;cursor:pointer}
+.mob-toggle svg{width:20px;height:20px;fill:none;stroke:var(--text);stroke-width:2}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:16px;padding-top:64px}
+  .mob-toggle{display:block}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .settings-grid{grid-template-columns:1fr}
+  .fg.full{grid-column:span 1}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-mark">
+        <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+    </div>
+    <div class="login-title">Admin Dashboard</div>
+    <div class="login-sub">KodandRoid — Owner Access Only</div>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Enter username" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Login to Dashboard →</button>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-hint">Default: admin / kodandroid2025</div>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+
+  <!-- Mobile toggle -->
+  <button class="mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="s-mark"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <span class="s-name">KodandRoid</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="snav-item active" onclick="switchTab('overview',this)"><span class="icon">📊</span> Overview</button>
+      <button class="snav-item" onclick="switchTab('logo',this)"><span class="icon">🖼️</span> Logo Manager</button>
+      <button class="snav-item" onclick="switchTab('inquiries',this)"><span class="icon">📩</span> Inquiries <span id="inqBadge" style="margin-left:auto;background:var(--accent);color:#fff;border-radius:99px;padding:2px 8px;font-size:10px;font-weight:700;display:none"></span></button>
+      <button class="snav-item" onclick="switchTab('settings',this)"><span class="icon">⚙️</span> Site Settings</button>
+      <button class="snav-item" onclick="switchTab('security',this)"><span class="icon">🔐</span> Security</button>
+      <button class="snav-item" onclick="window.open('index.html','_blank')"><span class="icon">🌐</span> View Portfolio</button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="doLogout()"><span>🚪</span> Logout</button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="top-bar">
+      <h1 id="tabTitle">Overview</h1>
+      <div class="badge"><div class="badge-dot"></div>Admin Panel</div>
+    </div>
+
+    <!-- ── OVERVIEW ── -->
+    <div class="tab-content active" id="tab-overview">
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-ico">📩</div><div class="stat-val" id="statInq">0</div><div class="stat-lbl">Total Inquiries</div></div>
+        <div class="stat-card"><div class="stat-ico">🖼️</div><div class="stat-val" id="statLogo">—</div><div class="stat-lbl">Logo Status</div></div>
+        <div class="stat-card"><div class="stat-ico">📱</div><div class="stat-val">6</div><div class="stat-lbl">Portfolio Items</div></div>
+        <div class="stat-card"><div class="stat-ico">⭐</div><div class="stat-val">3</div><div class="stat-lbl">Testimonials</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>🚀</span> Quick Actions</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn-upload" onclick="switchTab('logo',document.querySelector('[onclick*=logo]'))">🖼️ Change Logo</button>
+          <button class="btn-upload" onclick="switchTab('inquiries',document.querySelectorAll('.snav-item')[2])">📩 View Inquiries</button>
+          <button class="btn-upload" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)" onclick="window.open('index.html','_blank')">🌐 Preview Site</button>
+          <button class="btn-upload" onclick="switchTab('settings',document.querySelectorAll('.snav-item')[3])">⚙️ Edit Settings</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>📋</span> Recent Inquiries</div>
+        <div id="overviewInqList"><div class="empty-state"><div class="e-ico">📭</div><p>No inquiries yet.<br/>They will appear here when clients submit the contact form.</p></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>🌐</span> Deploy Guide</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="background:var(--bg4);border-radius:12px;padding:14px;border-left:3px solid var(--accent)">
+            <div style="color:#fff;font-size:13px;font-weight:700;margin-bottom:4px">Step 1 — Create GitHub Account</div>
+            <div style="color:var(--sub);font-size:12px;line-height:1.6">Go to <span style="color:var(--accent)">github.com</span> → Sign up free → Create new repository named <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:11px">kodandroid</code></div>
+          </div>
+          <div style="background:var(--bg4);border-radius:12px;padding:14px;border-left:3px solid var(--a2)">
+            <div style="color:#fff;font-size:13px;font-weight:700;margin-bottom:4px">Step 2 — Upload Files</div>
+            <div style="color:var(--sub);font-size:12px;line-height:1.6">Upload <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:11px">index.html</code> and <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:11px">admin.html</code> to the repository</div>
+          </div>
+          <div style="background:var(--bg4);border-radius:12px;padding:14px;border-left:3px solid var(--green)">
+            <div style="color:#fff;font-size:13px;font-weight:700;margin-bottom:4px">Step 3 — Enable GitHub Pages (FREE)</div>
+            <div style="color:var(--sub);font-size:12px;line-height:1.6">Settings → Pages → Source: main branch → Save<br/>Your site: <span style="color:var(--green)">yourusername.github.io/kodandroid</span></div>
+          </div>
+          <div style="background:var(--bg4);border-radius:12px;padding:14px;border-left:3px solid var(--gold)">
+            <div style="color:#fff;font-size:13px;font-weight:700;margin-bottom:4px">Alternative — Netlify (Drag & Drop)</div>
+            <div style="color:var(--sub);font-size:12px;line-height:1.6">Go to <span style="color:var(--accent)">netlify.com</span> → Drop your folder → Instant live URL in 30 seconds! Completely FREE.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- ── LOGO MANAGER ── -->
+    <div class="tab-content" id="tab-logo">
+      <div class="card">
+        <div class="card-title"><span>🖼️</span> Upload Your Logo</div>
+        <p style="color:var(--sub);font-size:13px;margin-bottom:20px;line-height:1.6">Upload your logo image from your gallery. It will appear in both the <strong style="color:var(--text)">Navigation bar</strong> and the <strong style="color:var(--text)">Hero Banner</strong> on your public portfolio.</p>
+
+        <div class="logo-upload-area" id="dropArea" onclick="document.getElementById('logoFileIn').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+          <div class="upload-ico">🖼️</div>
+          <div class="upload-txt">Tap to select from Gallery</div>
+          <div class="upload-sub">PNG, JPG, WebP — Max 5MB<br/>Transparent PNG recommended</div>
+          <button class="btn-upload" onclick="event.stopPropagation();document.getElementById('logoFileIn').click()">📂 Browse Gallery</button>
+        </div>
+        <input type="file" id="logoFileIn" accept="image/*" onchange="handleLogo(event)"/>
+
+        <!-- Preview -->
+        <div id="logoPreviewArea" style="display:none">
+          <div>
+            <div style="color:var(--sub);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Nav Logo</div>
+            <div class="logo-preview-nav" id="navPreview">
+              <svg viewBox="0 0 24 24" width="20" height="20"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+          </div>
+          <div>
+            <div style="color:var(--sub);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Banner Logo</div>
+            <div class="logo-preview-banner" id="bannerPreview">
+              <svg viewBox="0 0 24 24" width="38" height="38"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+          </div>
+          <div style="flex:1">
+            <div style="color:var(--text);font-size:14px;font-weight:700;margin-bottom:4px" id="logoFileName">—</div>
+            <div style="color:var(--sub);font-size:12px" id="logoFileSize">—</div>
+            <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+              <button class="btn-save" onclick="saveLogo()">✅ Apply to Portfolio</button>
+              <button class="btn-remove" onclick="removeLogo()">🗑️ Remove Logo</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="logoStatus" style="margin-top:16px;padding:12px 14px;border-radius:10px;font-size:13px;font-weight:600;display:none"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>💡</span> Logo Tips</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:12px;align-items:flex-start;background:var(--bg4);padding:14px;border-radius:12px">
+            <span style="font-size:20px;flex-shrink:0">✅</span>
+            <div style="font-size:13px;color:var(--sub);line-height:1.6"><strong style="color:var(--text)">Best format:</strong> PNG with transparent background — looks professional on any background</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;background:var(--bg4);padding:14px;border-radius:12px">
+            <span style="font-size:20px;flex-shrink:0">📐</span>
+            <div style="font-size:13px;color:var(--sub);line-height:1.6"><strong style="color:var(--text)">Recommended size:</strong> Square logo 512×512px or 1024×1024px for best quality</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;background:var(--bg4);padding:14px;border-radius:12px">
+            <span style="font-size:20px;flex-shrink:0">💾</span>
+            <div style="font-size:13px;color:var(--sub);line-height:1.6"><strong style="color:var(--text)">Auto-saved:</strong> Logo is saved in browser storage and loads automatically on every visit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INQUIRIES ── -->
+    <div class="tab-content" id="tab-inquiries">
+      <div class="card">
+        <div class="card-title"><span>📩</span> Client Inquiries</div>
+        <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+          <button class="inq-btn reply" onclick="clearAllInquiries()" style="font-size:12px">🗑️ Clear All</button>
+          <span style="color:var(--sub);font-size:13px;display:flex;align-items:center" id="inqCount">0 inquiries</span>
+        </div>
+        <div class="inquiries-list" id="inqList">
+          <div class="empty-state"><div class="e-ico">📭</div><p>No inquiries yet.<br/>When clients fill your contact form, their details will appear here.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
+    <div class="tab-content" id="tab-settings">
+      <div class="card">
+        <div class="card-title"><span>📍</span> Contact Information</div>
+        <div class="settings-grid">
+          <div class="fg"><label>Business Name</label><input type="text" id="sName" placeholder="KodandRoid"/></div>
+          <div class="fg"><label>Instagram Handle</label><input type="text" id="sInsta" placeholder="@kodandroid"/></div>
+          <div class="fg"><label>WhatsApp Number</label><input type="tel" id="sWA" placeholder="+91 XXXXX XXXXX"/></div>
+          <div class="fg"><label>Email Address</label><input type="email" id="sEmail" placeholder="hello@kodandroid.in"/></div>
+          <div class="fg"><label>Location</label><input type="text" id="sLoc" placeholder="Mumbai, Maharashtra 400102"/></div>
+          <div class="fg"><label>Working Hours</label><input type="text" id="sHours" placeholder="Mon–Sat, 10AM – 8PM IST"/></div>
+          <div class="fg full"><label>Short Bio / Tagline</label><textarea id="sBio" placeholder="Building digital products that make a difference..."></textarea></div>
+        </div>
+        <button class="btn-save" style="margin-top:8px" onclick="saveSettings()">💾 Save Settings</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>📊</span> Stats (shown on portfolio)</div>
+        <div class="settings-grid">
+          <div class="fg"><label>Projects Delivered</label><input type="text" id="st1" placeholder="120"/></div>
+          <div class="fg"><label>Happy Clients</label><input type="text" id="st2" placeholder="98"/></div>
+          <div class="fg"><label>Years Experience</label><input type="text" id="st3" placeholder="3"/></div>
+        </div>
+        <button class="btn-save" style="margin-top:8px" onclick="saveStats()">💾 Save Stats</button>
+      </div>
+    </div>
+
+    <!-- ── SECURITY ── -->
+    <div class="tab-content" id="tab-security">
+      <div class="card pass-form">
+        <div class="card-title"><span>🔐</span> Change Password</div>
+        <div class="fg" style="margin-bottom:14px"><label>Current Password</label><input type="password" id="curPass" placeholder="Current password"/></div>
+        <div class="fg" style="margin-bottom:14px"><label>New Password</label><input type="password" id="newPass" placeholder="New password (min 6 chars)"/></div>
+        <div class="fg" style="margin-bottom:18px"><label>Confirm New Password</label><input type="password" id="conPass" placeholder="Confirm new password"/></div>
+        <button class="btn-save" onclick="changePass()">🔐 Update Password</button>
+      </div>
+      <div class="card">
+        <div class="card-title"><span>ℹ️</span> Security Note</div>
+        <p style="color:var(--sub);font-size:13px;line-height:1.7">Your admin credentials are stored locally in your browser. For production use, consider deploying with a proper backend server for secure authentication. The current setup is suitable for personal/local use.</p>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /dashboard -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CREDENTIALS ──────────────────────────
+var CREDS = {
+  user: localStorage.getItem('kar_user') || 'admin',
+  pass: localStorage.getItem('kar_pass') || 'kodandroid2025'
+};
+
+// ── LOGIN ─────────────────────────────────
+function doLogin(){
+  var u=document.getElementById('loginUser').value.trim();
+  var p=document.getElementById('loginPass').value;
+  var err=document.getElementById('loginErr');
+  if(!u||!p){err.textContent='Please enter username and password.';return}
+  if(u===CREDS.user && p===CREDS.pass){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    err.textContent='';
+    loadAll();
+    toast('Welcome back! 👋');
+  } else {
+    err.textContent='❌ Invalid credentials. Try again.';
+    document.getElementById('loginPass').value='';
+  }
+}
+
+function doLogout(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+}
+
+// ── TAB SWITCHING ─────────────────────────
+var tabTitles={overview:'Overview',logo:'Logo Manager',inquiries:'Inquiries',settings:'Site Settings',security:'Security'};
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.snav-item').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  document.getElementById('tabTitle').textContent=tabTitles[name]||name;
+  if(name==='inquiries') loadInquiries();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ── LOGO MANAGER ─────────────────────────
+var currentLogoSrc = null;
+
+function handleLogo(evt){
+  var file=evt.target.files[0];
+  if(!file){return}
+  if(!file.type.startsWith('image/')){toast('Please select an image file!','err');return}
+  if(file.size > 5*1024*1024){toast('File too large! Max 5MB.','err');return}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    currentLogoSrc=e.target.result;
+    showLogoPreview(currentLogoSrc, file.name, (file.size/1024).toFixed(1)+' KB');
+  };
+  reader.readAsDataURL(file);
+}
+
+function showLogoPreview(src, name, size){
+  var pa=document.getElementById('logoPreviewArea');
+  pa.style.display='flex';
+  document.getElementById('navPreview').innerHTML='<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"/>';
+  document.getElementById('bannerPreview').innerHTML='<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"/>';
+  document.getElementById('logoFileName').textContent=name||'Custom Logo';
+  document.getElementById('logoFileSize').textContent=size||'';
+}
+
+function dragOver(e){e.preventDefault();document.getElementById('dropArea').classList.add('dragging')}
+function dragLeave(){document.getElementById('dropArea').classList.remove('dragging')}
+function dropFile(e){
+  e.preventDefault();
+  document.getElementById('dropArea').classList.remove('dragging');
+  var file=e.dataTransfer.files[0];
+  if(file&&file.type.startsWith('image/')){
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      currentLogoSrc=ev.target.result;
+      showLogoPreview(currentLogoSrc,file.name,(file.size/1024).toFixed(1)+' KB');
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function saveLogo(){
+  if(!currentLogoSrc){toast('Please select a logo first!','err');return}
+  try{
+    localStorage.setItem('kar_logo', currentLogoSrc);
+    document.getElementById('statLogo').textContent='Set ✓';
+    var st=document.getElementById('logoStatus');
+    st.style.display='block';
+    st.style.background='rgba(6,214,160,.1)';
+    st.style.border='1px solid rgba(6,214,160,.25)';
+    st.style.color='var(--green)';
+    st.textContent='✅ Logo saved! It will appear on your portfolio (index.html) automatically.';
+    toast('✅ Logo applied to portfolio!');
+  }catch(x){toast('Storage full — try a smaller image.','err')}
+}
+
+function removeLogo(){
+  try{localStorage.removeItem('kar_logo');}catch(x){}
+  currentLogoSrc=null;
+  document.getElementById('logoPreviewArea').style.display='none';
+  document.getElementById('logoFileIn').value='';
+  document.getElementById('statLogo').textContent='None';
+  var st=document.getElementById('logoStatus');
+  st.style.display='block';
+  st.style.background='rgba(239,68,68,.1)';
+  st.style.border='1px solid rgba(239,68,68,.2)';
+  st.style.color='var(--red)';
+  st.textContent='Logo removed. Default icon will be shown.';
+  toast('Logo removed successfully.');
+}
+
+// ── INQUIRIES ─────────────────────────────
+// Demo: save inquiry from URL params or manual add
+function loadInquiries(){
+  var data=[];
+  try{data=JSON.parse(localStorage.getItem('kar_inquiries')||'[]');}catch(x){}
+  var list=document.getElementById('inqList');
+  var ovList=document.getElementById('overviewInqList');
+  document.getElementById('statInq').textContent=data.length;
+  document.getElementById('inqCount').textContent=data.length+' inquiries';
+  var badge=document.getElementById('inqBadge');
+  if(data.length>0){badge.style.display='inline';badge.textContent=data.length;}
+  else{badge.style.display='none';}
+  if(data.length===0){
+    var empty='<div class="empty-state"><div class="e-ico">📭</div><p>No inquiries yet.<br/>When clients fill your contact form, their details will appear here.</p></div>';
+    list.innerHTML=empty; ovList.innerHTML=empty; return;
+  }
+  var html='';
+  data.slice().reverse().forEach(function(inq,i){
+    html+='<div class="inquiry-card">';
+    html+='<div class="inq-top"><div class="inq-name">'+esc(inq.name)+'</div>';
+    html+='<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="inq-cat">'+esc(inq.category)+'</span><span class="inq-budget">'+esc(inq.budget)+'</span></div></div>';
+    html+='<div class="inq-details">';
+    if(inq.phone) html+='<span class="inq-detail">📱 '+esc(inq.phone)+'</span>';
+    if(inq.instagram) html+='<span class="inq-detail">📸 '+esc(inq.instagram)+'</span>';
+    if(inq.date) html+='<span class="inq-detail">🕐 '+esc(inq.date)+'</span>';
+    html+='</div>';
+    if(inq.message) html+='<div class="inq-msg">'+esc(inq.message)+'</div>';
+    html+='<div class="inq-actions">';
+    if(inq.phone) html+='<button class="inq-btn reply" onclick="window.open(\'https://wa.me/\'+\''+esc(inq.phone.replace(/\D/g,''))+'\',\'_blank\')">💬 WhatsApp</button>';
+    html+='<button class="inq-btn del" onclick="deleteInquiry('+( data.length-1-i )+')">🗑️ Delete</button>';
+    html+='</div></div>';
+  });
+  list.innerHTML=html;
+  // overview shows latest 3
+  ovList.innerHTML=data.length===0?'<div class="empty-state"><div class="e-ico">📭</div><p>No inquiries yet.</p></div>':html.split('</div></div>').slice(0,3).join('</div></div>')+'</div></div>';
+}
+
+function deleteInquiry(idx){
+  var data=[];
+  try{data=JSON.parse(localStorage.getItem('kar_inquiries')||'[]');}catch(x){}
+  data.splice(idx,1);
+  localStorage.setItem('kar_inquiries',JSON.stringify(data));
+  loadInquiries();
+  toast('Inquiry deleted.');
+}
+
+function clearAllInquiries(){
+  if(!confirm('Delete ALL inquiries? This cannot be undone.'))return;
+  localStorage.setItem('kar_inquiries','[]');
+  loadInquiries();
+  toast('All inquiries cleared.');
+}
+
+// ── SETTINGS ─────────────────────────────
+function loadSettings(){
+  var s={};
+  try{s=JSON.parse(localStorage.getItem('kar_settings')||'{}');}catch(x){}
+  if(s.name) document.getElementById('sName').value=s.name;
+  if(s.insta) document.getElementById('sInsta').value=s.insta;
+  if(s.wa) document.getElementById('sWA').value=s.wa;
+  if(s.email) document.getElementById('sEmail').value=s.email;
+  if(s.loc) document.getElementById('sLoc').value=s.loc;
+  if(s.hours) document.getElementById('sHours').value=s.hours;
+  if(s.bio) document.getElementById('sBio').value=s.bio;
+  if(s.st1) document.getElementById('st1').value=s.st1;
+  if(s.st2) document.getElementById('st2').value=s.st2;
+  if(s.st3) document.getElementById('st3').value=s.st3;
+}
+
+function saveSettings(){
+  var s={
+    name:document.getElementById('sName').value,
+    insta:document.getElementById('sInsta').value,
+    wa:document.getElementById('sWA').value,
+    email:document.getElementById('sEmail').value,
+    loc:document.getElementById('sLoc').value,
+    hours:document.getElementById('sHours').value,
+    bio:document.getElementById('sBio').value
+  };
+  try{localStorage.setItem('kar_settings',JSON.stringify(s));toast('✅ Settings saved!');}
+  catch(x){toast('Save failed!','err')}
+}
+
+function saveStats(){
+  var s={};
+  try{s=JSON.parse(localStorage.getItem('kar_settings')||'{}');}catch(x){}
+  s.st1=document.getElementById('st1').value;
+  s.st2=document.getElementById('st2').value;
+  s.st3=document.getElementById('st3').value;
+  try{localStorage.setItem('kar_settings',JSON.stringify(s));toast('✅ Stats saved!');}
+  catch(x){toast('Save failed!','err')}
+}
+
+// ── SECURITY ─────────────────────────────
+function changePass(){
+  var cur=document.getElementById('curPass').value;
+  var nw=document.getElementById('newPass').value;
+  var cn=document.getElementById('conPass').value;
+  if(cur!==CREDS.pass){toast('Current password is wrong!','err');return}
+  if(nw.length<6){toast('New password must be at least 6 characters!','err');return}
+  if(nw!==cn){toast('Passwords do not match!','err');return}
+  CREDS.pass=nw;
+  localStorage.setItem('kar_pass',nw);
+  document.getElementById('curPass').value='';
+  document.getElementById('newPass').value='';
+  document.getElementById('conPass').value='';
+  toast('✅ Password updated successfully!');
+}
+
+// ── HELPERS ───────────────────────────────
+function esc(s){
+  if(!s)return'';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function loadAll(){
+  loadInquiries();
+  loadSettings();
+  var saved=localStorage.getItem('kar_logo');
+  if(saved){
+    document.getElementById('statLogo').textContent='Set ✓';
+    showLogoPreview(saved,'Saved Logo','');
+    currentLogoSrc=saved;
+  }
+}
+
+var tt=null;
+function toast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast on'+(type==='err'?' err':'');
+  if(tt)clearTimeout(tt);
+  tt=setTimeout(function(){t.classList.remove('on');},3200);
+}
+
+// ── ADD SAMPLE INQUIRY (for demo) ─────────
+function addSampleInquiry(){
+  var data=[];
+  try{data=JSON.parse(localStorage.getItem('kar_inquiries')||'[]');}catch(x){}
+  data.push({
+    name:'Ravi Kumar',phone:'+91 98765 43210',instagram:'@ravikodes',
+    category:'Android App',budget:'₹15,000 – ₹50,000',
+    message:'I need a food delivery app for my restaurant. Should have order tracking, menu management and payment integration.',
+    date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
+  });
+  localStorage.setItem('kar_inquiries',JSON.stringify(data));
+  loadInquiries();
+  toast('Sample inquiry added!');
+}
+</script>
+</body>
+</html>
